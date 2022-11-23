@@ -1,0 +1,88 @@
+<html>
+<head>
+    <title>Borrow Document</title>
+    <style>
+        th,td {
+  text-align: center;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+    </style>
+</head>
+<body>
+    <h1>Borrow Document</h1>
+    
+    <p>Here are the books that are in library:</p>
+        <table style="border: 1px solid black; width: 100%;">
+            <tr style="border: 1px solid black;">
+                <th style="border: 1px solid black;">Document ID</th>
+                <th style="border: 1px solid black;">Title</th>
+                <th style="border: 1px solid black;">Edition</th>
+                <th style="border: 1px solid black;">Year</th>
+                <th style="border: 1px solid black;">Published By</th>
+                <th style="border: 1px solid black;">Borrow Book</th>
+            </tr>
+            {% for book in books %}
+                <tr style="border: 1px solid black;"><td style="border: 1px solid black;">{{ book[0] }}</td>
+                    <td style="border: 1px solid black;">{{ book[1] }}</td>
+                    <td style="border: 1px solid black;">{{ book[2] }}</td>
+                    <td style="border: 1px solid black;">{{ book[3] }}</td>
+                    <td style="border: 1px solid black;">{{ book[4] }}</td>
+                    <td style="border: 1px solid black;"><form action="/borrow_document" method="post">
+                        <input type="hidden" name="document_id" id="document_id" value="{{ book[0]}}">
+                        <input type="submit" value="Borrow">
+                    </form></td>
+                </tr>
+            {% endfor %}
+        </table>
+    <hr>
+    <p>Here are the issues that are in library:</p>
+    <table style="border: 1px solid black;">
+        <tr style="border: 1px solid black;">
+            <th style="border: 1px solid black;">Document ID</th>
+            <th style="border: 1px solid black;">Title</th>
+            <th style="border: 1px solid black;">Date Of Issue</th>
+            <th style="border: 1px solid black;">Magazine Name</th>
+            <th style="border: 1px solid black;">Borrow Issue</th>
+        </tr>
+        {% for book in issues %}
+            <tr style="border: 1px solid black;"><td style="border: 1px solid black;">{{ book[0] }}</td>
+                <td style="border: 1px solid black;">{{ book[1] }}</td>
+                <td style="border: 1px solid black;">{{ book[2] }}</td>
+                <td style="border: 1px solid black;">{{ book[3] }}</td>
+                <td style="border: 1px solid black;"><form action="/borrow_document" method="post">
+                    <input type="hidden" name="document_id" id="document_id" value="{{ book[0]}}">
+                    <input type="submit" value="Borrow">
+                </form></td>
+            </tr>
+        {% endfor %}
+    </table>
+        <hr>
+        <p>Here are the articles that are in library:</p>
+        <table style="border: 1px solid black;">
+            <tr style="border: 1px solid black;">
+                <th style="border: 1px solid black;">Document ID</th>
+                <th style="border: 1px solid black;">Title</th>
+                <th style="border: 1px solid black;">Journal Name</th>
+                <th style="border: 1px solid black;">Journal Published On</th>
+                <th style="border: 1px solid black;">Journal Published By</th>
+                <th style="border: 1px solid black;">Borrow Article</th>
+            </tr>
+            {% for book in articles %}
+                <tr style="border: 1px solid black;"><td style="border: 1px solid black;">{{ book[0] }}</td>
+                    <td style="border: 1px solid black;">{{ book[1] }}</td>
+                    <td style="border: 1px solid black;">{{ book[2] }}</td>
+                    <td style="border: 1px solid black;">{{ book[3] }}</td>
+                    <td style="border: 1px solid black;">{{ book[4] }}</td>
+                    <td style="border: 1px solid black;"><form action="/borrow_document" method="post">
+                        <input type="hidden" name="document_id" id="document_id" value="{{ book[0]}}">
+                        <input type="submit" value="Borrow">
+                    </form></td>
+                </tr>
+            {% endfor %}
+        </table>
+    <a href="./member_home">Back to Dashboard!</a>
+</body>
+</html>

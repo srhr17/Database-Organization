@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+   <body>
+      <h1>Library Management System</h1>
+
+      <h3>Sign Up</h3>
+      <form method="post" action="{{url_for('add')}}">
+         <label for="firstname">First Name</label>
+         <input type="text" name="firstname" id="firstname">
+         <label for="lastname">Last Name</label>
+         <input type="text" name="lastname" id="lastname">
+          <label for="username">Email</label>
+          <input type="text" name="username" id="username">
+          <label for="password">Password</label>
+          <input type="password" name="password" id="password">
+          <label for="dob">Date of Birth</label>
+          <input type="date" name="dob" id="dob">
+          <input type="submit" value="Submit">
+      </form>
+      <p>If you are a member already, please head to <a href="./index">Login</a> page.</p>
+   </body>
+</html>

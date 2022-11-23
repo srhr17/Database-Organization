@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Librarian Dashboard</title>
+    </head>
+    <body>
+        <h1>Librarian Dashboard</h1>
+        <p>Hi, {{ username }}!</p>
+        <button onclick="window.location.href='/add_book'">Add Book</button>
+        <button onclick="window.location.href='/add_article'">Add Article</button>
+        <button onclick="window.location.href='/add_issue'">Add Issue</button>
+        <button onclick="window.location.href='/search_document'">Search Document</button>
+        <!-- <button onclick="window.location.href='/modify_document'">Modify Document</button> -->
+        <button onclick="window.location.href='/delete_member'">Remove Member</button>
+        <button onclick="window.location.href='/modify_member'">Update Profile</button>
+        <p>If you wish to <a href="/logout">logout, click here!</a></p>
+    </body>
+</html>

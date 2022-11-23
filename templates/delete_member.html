@@ -1,0 +1,35 @@
+<html>
+<head>
+<title>Remove Member</title>
+</head>
+<body>
+<h1>Remove Member</h1>
+<!-- Show all members -->
+<span>{{error}}</span>
+<h2>Current Members</h2>
+<table border="1">
+<tr>
+<th>Member ID</th>
+<th>First Name</th>
+<th>Last Name</th>
+<th>Remove Member</th>
+</tr>
+{% for member in members %}
+<tr>
+<td>{{ member[0] }}</td>
+<td>{{ member[1] }}</td>
+<td>{{ member[2] }}</td>
+<td style="border: 1px solid black;">
+    <form method="post" action="/delete_member">
+        <input type="hidden" name="member_id" value="{{ member[0] }}">
+        <input type="submit" value="Remove">
+    </form>
+    </td>
+</tr>
+{% endfor %}
+</tr>
+</table>
+<a href="./librarian_home">Back to Dashboard!</a>
+
+</body>
+</html>

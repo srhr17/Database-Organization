@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Issue</title>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+   <script type="text/javascript">
+            $('#year').datetimepicker({
+            format      :   "YYYY",
+            viewMode    :   "years", 
+             });
+   </script>
+</head>
+<body>
+    <h1>Add Book</h1>
+    <form action="/add_issue" method="POST">
+        <label for="title">Title</label>
+        <input type="text" name="title" id="title" required>
+        <label for="author">Contributor Name (Seperate using ,)</label>
+        <input type="text" name="author" id="author" required>
+        <label for="year">Date of Issue</label>
+        <input type="date" name="year" id="year" required>
+        <label for="published_by">Magazine Name</label>
+        <input type="text" name="published_by" id="published_by" required>
+        <button type="submit">Add Issue</button>
+    </form>
+    <hr>
+    <p>Here are the issues that are in library:</p>
+        <ol>
+            {% for issue in issues %}
+                <li>{{ issue }}</li>
+            {% endfor %}
+        </ol>
+    <a href="./librarian_home">Back to Dashboard!</a>
+</body>
+</html>

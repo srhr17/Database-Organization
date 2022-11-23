@@ -1,0 +1,81 @@
+<html>
+<head>
+<title>Modify Document</title>
+</head>
+<body>
+<h1>Modify Document</h1>
+<form action="/modify_document" method="post">
+    <select name="document_type" id="typeOfDocument">
+        <option value="Book">Book</option>
+        <option value="Article">Article</option>
+        <option value="Issue">Issue</option>
+    </select>
+
+</form>
+<hr>
+<h2>Here is all the books in the library </h2>
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Year</th>
+        <th>ISBN</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Modify</th>
+    </tr>
+    {% for book in books %}
+    <tr>
+        <td>{{ book.title }}</td>
+        <td>{{ book.author }}</td>
+        <td>{{ book.year }}</td>
+        <td>{{ book.isbn }}</td>
+        <td>{{ book.price }}</td>
+        <td>{{ book.quantity }}</td>
+        <td><a href="/modify_book/{{ book.id }}">Modify</a></td>
+    </tr>
+    {% endfor %}
+    <hr>
+    <h2>Here is all the articles in the library </h2>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Year</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Modify</th>
+        </tr>
+        {% for article in articles %}
+        <tr>
+            <td>{{ article.title }}</td>
+            <td>{{ article.author }}</td>
+            <td>{{ article.year }}</td>
+            <td>{{ article.price }}</td>
+            <td>{{ article.quantity }}</td>
+            <td><a href="/modify_article/{{ article.id }}">Modify</a></td>
+        </tr>
+        {% endfor %}
+        <hr>
+        <h2>Here is all the issues in the library </h2>
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Year</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Modify</th>
+            </tr>
+            {% for issue in issues %}
+            <tr>
+                <td>{{ issue.title }}</td>
+                <td>{{ issue.author }}</td>
+                <td>{{ issue.year }}</td>
+                <td>{{ issue.price }}</td>
+                <td>{{ issue.quantity }}</td>
+                <td><a href="/modify_issue/{{ issue.id }}">Modify</a></td>
+            </tr>
+            {% endfor %}
+</body>
+</html>

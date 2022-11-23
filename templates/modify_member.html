@@ -1,0 +1,46 @@
+<!-- html to update the member's information.  The form will be pre-filled with the data from database -->
+<!-- The form will be submitted to the same page, but with the action set to update_member -->
+
+<html>
+<head>
+<title>Modify Member</title>
+</head>
+<body>
+<h1>Modify Member</h1>
+<form action="/modify_member" method="post">
+<table>
+<tr>
+    <td>User ID:</td>
+   <td> <input type="text" name="id" id="id" value={{id}} readonly/></td>
+</tr>
+<tr>
+    <td>Member Since</td>
+    <td><input type="text" name="memberSince" id="memberSince" value={{memberSince}} readonly></td>
+
+</tr>
+<tr>
+<td>First Name:</td>
+<td><input type="text" name="fname" id ="fname" value={{fname}} /></td>
+</tr>
+<tr>
+<td>Last Name:</td>
+<td><input type="text" name="lname" id ="lname" value={{lname}} /></td>
+</tr>
+<tr>
+<td>Date of Birth:</td>
+<td><input type="text" name="dob" id ="dob" value={{dob}} /></td>
+</tr>
+<tr>
+<td>Password:</td>
+<td><input type="text" name="password" id ="password" value={{password}} /></td>
+</tr>
+<tr>
+
+<td><input type="submit" value="Update Member" /></td>
+</tr>
+</form>
+
+<a href="./librarian_home">Back to Dashboard!</a>
+
+</body>
+</html>

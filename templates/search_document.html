@@ -1,0 +1,168 @@
+<!-- render form based on select value -->
+<html>
+<head>
+    <title>Search</title>
+    <style>
+        th,td {
+            text-align: center;
+        }
+    </style>
+    <script>
+        function showForm() {
+            var x = document.getElementById("documenttype").value;
+            if (x == 0) {
+                document.getElementById("bookForm").style.display = "block";
+                document.getElementById("articleForm").style.display = "none";
+                document.getElementById("issueForm").style.display = "none";
+            } else if (x == 1) {
+                document.getElementById("bookForm").style.display = "none";
+                document.getElementById("articleForm").style.display = "block";
+                document.getElementById("issueForm").style.display = "none";
+            }
+            else if (x == 2) {
+                document.getElementById("bookForm").style.display = "none";
+                document.getElementById("articleForm").style.display = "none";
+                document.getElementById("issueForm").style.display = "block";
+            }
+        }
+
+    </script>
+</head>
+<body onload="showForm(this.value)">
+    <h2>Search Document</h2>
+    <select name="documenttype" id="documenttype" onchange="showForm(this.value)">
+        <option value="0" {{a}}>Book</option>
+        <option value="1" {{b}}>Article</option>
+        <option value="2" {{c}}>Issue</option>
+    </select>
+    <div id="bookForm" style="display: block;">
+    <form method="post" action="/search_document">
+        <input type="hidden" name="documenttype" value="0">
+        <label for="booktitle">Book Title</label>
+        <input type="text" name="booktitle" id="booktitle" value="">
+        <label for="bookauthor">Book Author</label>
+        <input type="text" name="bookauthor" id="bookauthor" value="">
+        <label for="bookpublisher">Book Publisher</label>
+        <input type="text" name="bookpublisher" id="bookpublisher" value="">
+        <label for="edition">Edition</label>
+        <input type="text" name="edition" id="edition" value="">
+        <input type="submit" value="Search">
+    </form>
+    <p>Here are the documents matching your search</p>
+    <table style="border: 1px solid black; width: 100%;" id="documents">
+        <tr style="border: 1px solid black;">
+            <th style="border: 1px solid black;">Document ID</th>
+            <th style="border: 1px solid black;">Title</th>
+            <th style="border: 1px solid black;">Edition</th>
+            <th style="border: 1px solid black;">Published On</th>
+            <th style="border: 1px solid black;">Published By</th>
+            <th style="border: 1px solid black;">Author Name</th>
+            <th style="border: 1px solid black;">Availability</th>
+        </tr>
+        {% for book in books %}
+            <tr style="border: 1px solid black;"><td style="border: 1px solid black;">{{ book[0] }}</td>
+                <td style="border: 1px solid black;">{{ book[1] }}</td>
+                <td style="border: 1px solid black;">{{ book[2] }}</td>
+                <td style="border: 1px solid black;">{{ book[3] }}</td>
+                <td style="border: 1px solid black;">{{ book[4] }}</td>
+                <td style="border: 1px solid black;">{{ book[5] }}</td>
+                {% if book[6] == 1 %}
+                    <td style="border: 1px solid black;"><form action="/borrow_document" method="post">
+                        <input type="hidden" name="document_id" id="document_id" value="{{ book[0]}}">
+                        <input type="submit" value="Borrow">
+                    </form></td>
+                {% else %}
+                    <td style="border: 1px solid black;">Rented</td>
+                {% endif %} 
+            </tr>
+        {% endfor %}
+            </table>
+        </div>
+        <div id="articleForm" style="display: none;">
+    <form method="post" action="/search_document">
+        <input type="hidden" name="documenttype" value="1">
+        <label for="articletitle">Article Title</label>
+        <input type="text" name="articletitle" id="articletitle" value="">
+        <label for="articleauthor">Article Author</label>
+        <input type="text" name="articleauthor" id="articleauthor" value="">
+        <label for="journal">Journal Name</label>
+        <input type="text" name="journal" id="journal" value="">
+        <label for="journalpublisher">Journal Publisher</label>
+        <input type="text" name="journalpublisher" id="journalpublisher" value="">
+        <input type="submit" value="Search">
+    </form>
+    <p>Here are the documents matching your search</p>
+    <table style="border: 1px solid black; width: 100%;" id="documents">
+        <tr style="border: 1px solid black;">
+            <th style="border: 1px solid black;">Document ID</th>
+            <th style="border: 1px solid black;">Title</th>
+            <th style="border: 1px solid black;">Author Name</th>
+            <th style="border: 1px solid black;">Journal Name</th>
+            <th style="border: 1px solid black;">Journal Published By</th>
+            <th style="border: 1px solid black;">Availability</th>
+        </tr>
+        {% for book in articles %}
+            <tr style="border: 1px solid black;"><td style="border: 1px solid black;">{{ book[0] }}</td>
+                <td style="border: 1px solid black;">{{ book[1] }}</td>
+                <td style="border: 1px solid black;">{{ book[5] }}</td>
+                <td style="border: 1px solid black;">{{ book[2] }}</td>
+                <td style="border: 1px solid black;">{{ book[4] }}</td>
+                {% if book[6] == 1 %}
+                    <td style="border: 1px solid black;"><form action="/borrow_document" method="post">
+                        <input type="hidden" name="document_id" id="document_id" value="{{ book[0]}}">
+                        <input type="submit" value="Borrow">
+                    </form></td>
+                {% else %}
+                    <td style="border: 1px solid black;">Rented</td>
+                {% endif %} 
+            </tr>
+        {% endfor %}
+            </table>
+</div>
+<div id="issueForm" style="display: none;">
+    <form method="post" action="/search_document">
+        <input type="hidden" name="documenttype" value="2">
+        <label for="issuetitle">Issue Title</label>
+        <input type="text" name="issuetitle" id="issuetitle" value="">
+        <label for="issueauthor">Issue Contributor</label>
+        <input type="text" name="issueauthor" id="issueauthor" value="">
+        <label for="magazine">Magazine Name</label>
+        <input type="text" name="magazine" id="magazine" value="">
+        <label for="issuefrom">Issues from</label>
+        <input type="date" name="issuefrom" id="issuefrom" value="01/01/1000">
+        <label for="issuetill">Issues till</label>
+        <input type="date" name="issuetill" id="issuetill" value="01/01/2099">
+        <input type="submit" value="Search">
+    </form>
+    <p>Here are the documents matching your search</p>
+    <table style="border: 1px solid black; width: 100%;" id="documents">
+        <tr style="border: 1px solid black;">
+            <th style="border: 1px solid black;">Document ID</th>
+            <th style="border: 1px solid black;">Title</th> 
+            <th style="border: 1px solid black;">Contributor</th>
+            <th style="border: 1px solid black;">Magazine Name</th>
+            <th style="border: 1px solid black;">Date of Issue</th>
+            <th style="border: 1px solid black;">Availability</th>
+        </tr>
+        {% for book in issues %}
+            <tr style="border: 1px solid black;"><td style="border: 1px solid black;">{{ book[0] }}</td>
+                <td style="border: 1px solid black;">{{ book[1] }}</td>
+                <td style="border: 1px solid black;">{{ book[2] }}</td>
+                <td style="border: 1px solid black;">{{ book[3] }}</td>
+                <td style="border: 1px solid black;">{{ book[4] }}</td>
+                {% if book[5] == 1 %}
+                    <td style="border: 1px solid black;"><form action="/borrow_document" method="post">
+                        <input type="hidden" name="document_id" id="document_id" value="{{ book[0]}}">
+                        <input type="submit" value="Borrow">
+                    </form></td>
+                {% else %}
+                    <td style="border: 1px solid black;">Rented</td>
+                {% endif %} 
+            </tr>
+        {% endfor %}
+            </table>
+</div>
+   
+        <a href="./member_home">Back to Dashboard!</a>
+    </body>
+</html>
