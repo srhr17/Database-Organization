@@ -27,9 +27,13 @@
         }
 
     </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    
 </head>
 <body onload="showForm(this.value)">
-    <h2>Search Document</h2>
+    <h2 class="text-muted text-center">Search Document</h2>
     <select name="documenttype" id="documenttype" onchange="showForm(this.value)">
         <option value="0" {{a}}>Book</option>
         <option value="1" {{b}}>Article</option>
@@ -38,15 +42,25 @@
     <div id="bookForm" style="display: block;">
     <form method="post" action="/search_document">
         <input type="hidden" name="documenttype" value="0">
+        <div>
         <label for="booktitle">Book Title</label>
         <input type="text" name="booktitle" id="booktitle" value="">
+        </div>
+        <div>
         <label for="bookauthor">Book Author</label>
         <input type="text" name="bookauthor" id="bookauthor" value="">
+        </div>
+        <div>
         <label for="bookpublisher">Book Publisher</label>
         <input type="text" name="bookpublisher" id="bookpublisher" value="">
+        </div>
+        <div>
         <label for="edition">Edition</label>
         <input type="text" name="edition" id="edition" value="">
-        <input type="submit" value="Search">
+        </div>
+        <div>
+        <input class="btn btn-success" type="submit" value="Search">
+        </div>
     </form>
     <p>Here are the documents matching your search</p>
     <table style="border: 1px solid black; width: 100%;" id="documents">
@@ -67,10 +81,16 @@
                 <td style="border: 1px solid black;">{{ book[4] }}</td>
                 <td style="border: 1px solid black;">{{ book[5] }}</td>
                 {% if book[6] == 1 %}
-                    <td style="border: 1px solid black;"><form action="/borrow_document" method="post">
-                        <input type="hidden" name="document_id" id="document_id" value="{{ book[0]}}">
-                        <input type="submit" value="Borrow">
-                    </form></td>
+                    {% if overdue ==1 %}
+                    <td style="border: 1px solid black;">Forbidden from borrowing, Overdue exists</td>
+                    {% else %}
+                        <td style="border: 1px solid black;">
+                            <form method="post" action="/borrow_document">
+                                <input type="hidden" name="document_id" value="{{ book[0] }}">
+                                <input type="submit" value="Borrow">
+                            </form>
+                            </td>
+                    {% endif %}
                 {% else %}
                     <td style="border: 1px solid black;">Rented</td>
                 {% endif %} 
@@ -108,13 +128,19 @@
                 <td style="border: 1px solid black;">{{ book[2] }}</td>
                 <td style="border: 1px solid black;">{{ book[4] }}</td>
                 {% if book[6] == 1 %}
-                    <td style="border: 1px solid black;"><form action="/borrow_document" method="post">
-                        <input type="hidden" name="document_id" id="document_id" value="{{ book[0]}}">
-                        <input type="submit" value="Borrow">
-                    </form></td>
+                    {% if overdue ==1 %}
+                    <td style="border: 1px solid black;">Forbidden from borrowing, Overdue exists</td>
+                    {% else %}
+                        <td style="border: 1px solid black;">
+                            <form method="post" action="/borrow_document">
+                                <input type="hidden" name="document_id" value="{{ book[0] }}">
+                                <input type="submit" value="Borrow">
+                            </form>
+                            </td>
+                    {% endif %}
                 {% else %}
                     <td style="border: 1px solid black;">Rented</td>
-                {% endif %} 
+                {% endif %}  
             </tr>
         {% endfor %}
             </table>
@@ -151,10 +177,16 @@
                 <td style="border: 1px solid black;">{{ book[3] }}</td>
                 <td style="border: 1px solid black;">{{ book[4] }}</td>
                 {% if book[5] == 1 %}
-                    <td style="border: 1px solid black;"><form action="/borrow_document" method="post">
-                        <input type="hidden" name="document_id" id="document_id" value="{{ book[0]}}">
-                        <input type="submit" value="Borrow">
-                    </form></td>
+                    {% if overdue ==1 %}
+                    <td style="border: 1px solid black;">Forbidden from borrowing, Overdue exists</td>
+                    {% else %}
+                        <td style="border: 1px solid black;">
+                            <form method="post" action="/borrow_document">
+                                <input type="hidden" name="document_id" value="{{ book[0] }}">
+                                <input type="submit" value="Borrow">
+                            </form>
+                            </td>
+                    {% endif %}
                 {% else %}
                     <td style="border: 1px solid black;">Rented</td>
                 {% endif %} 

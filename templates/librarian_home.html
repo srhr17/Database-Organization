@@ -13,6 +13,47 @@
         <!-- <button onclick="window.location.href='/modify_document'">Modify Document</button> -->
         <button onclick="window.location.href='/delete_member'">Remove Member</button>
         <button onclick="window.location.href='/modify_member'">Update Profile</button>
+
+<span>{{error}}</span>
+<h2>Current Members</h2>
+<table border="1">
+<tr>
+<th>Member ID</th>
+<th>First Name</th>
+<th>Last Name</th>
+<th>Overdue Status</th>
+<th>Remove Member</th>
+</tr>
+{% for member in overduemembers %}
+<tr>
+<td>{{ member[0] }}</td>
+<td>{{ member[1] }}</td>
+<td>{{ member[2] }}</td>
+<td>Overdue</td>
+<td style="border: 1px solid black;">
+    <form method="post" action="/delete_member">
+        <input type="hidden" name="member_id" value="{{ member[0] }}">
+        <input type="submit" value="Remove">
+    </form>
+    </td>
+</tr>
+{% endfor %}
+{% for member in notoverduemembers %}
+<tr>
+<td>{{ member[0] }}</td>
+<td>{{ member[1] }}</td>
+<td>{{ member[2] }}</td>
+<td>None</td>
+<td style="border: 1px solid black;">
+    <form method="post" action="/delete_member">
+        <input type="hidden" name="member_id" value="{{ member[0] }}">
+        <input type="submit" value="Remove">
+    </form>
+    </td>
+</tr>
+{% endfor %}
+</tr>
+</table>
         <p>If you wish to <a href="/logout">logout, click here!</a></p>
     </body>
 </html>

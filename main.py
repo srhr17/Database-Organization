@@ -81,8 +81,12 @@ def librarian_home():
         session.pop('username', None)
         session.pop('role', None)
         return redirect(url_for('index'))
+    mycursor.execute("SELECT * FROM USERS WHERE userID IN (SELECT userID FROM BORROW WHERE NOW()>returnBy) and typeOfUser='member'")
+    overduemembers=mycursor.fetchall()
+    mycursor.execute("SELECT * FROM USERS WHERE userID NOT IN (SELECT userID FROM BORROW WHERE NOW()>returnBy) and typeOfUser='member'")
+    notoverduemembers=mycursor.fetchall()
     
-    return render_template('librarian_home.html',username=session['name'])
+    return render_template('librarian_home.html',username=session['name'],overduemembers=overduemembers,notoverduemembers=notoverduemembers)
     
 @app.route('/member_home',methods=['GET'])
 def member_home():
@@ -93,19 +97,32 @@ def member_home():
         return redirect(url_for('index'))
     # mycursor.execute("SELECT * FROM BOOKS")
     # books=mycursor.fetchall()
-    mycursor.execute("SELECT documentID,title,typeOfDocument,borrowDate FROM BORROW NATURAL JOIN DOCUMENTS NATURAL JOIN BOOKS WHERE userId = %s and status='1'", (session['id'],))
+    overdue=0
+    mycursor.execute("SELECT documentID,title,typeOfDocument,borrowDate,returnBy FROM BORROW NATURAL JOIN DOCUMENTS NATURAL JOIN BOOKS WHERE userID = %s and status='1'", (session['id'],))
     books=mycursor.fetchall()
-    mycursor.execute("SELECT documentID,title,typeOfDocument,borrowDate FROM BORROW NATURAL JOIN DOCUMENTS NATURAL JOIN ARTICLES WHERE userId = %s and status='1'", (session['id'],))
+    mycursor.execute("SELECT documentID,title,typeOfDocument,borrowDate,returnBy FROM BORROW NATURAL JOIN DOCUMENTS NATURAL JOIN ARTICLES WHERE userID = %s and status='1'", (session['id'],))
     articles=mycursor.fetchall()
-    mycursor.execute("SELECT documentID,title,typeOfDocument,borrowDate FROM BORROW NATURAL JOIN DOCUMENTS NATURAL JOIN ISSUES WHERE userId = %s and status='1'", (session['id'],))
+    mycursor.execute("SELECT documentID,title,typeOfDocument,borrowDate,returnBy FROM BORROW NATURAL JOIN DOCUMENTS NATURAL JOIN ISSUES WHERE userID = %s and status='1'", (session['id'],))
     issues=mycursor.fetchall()
+    if len(books)>0:
+        for i in books:
+            if i[4]<datetime.datetime.now():
+                overdue=1
+    if len(articles)>0:
+        for i in articles:
+            if i[4]<datetime.datetime.now():
+                overdue=1
+    if len(issues)>0:
+        for i in issues:
+            if i[4]<datetime.datetime.now():
+                overdue=1
     mycursor.execute("SELECT DISTINCT(documentID),title,typeOfDocument FROM BORROW NATURAL JOIN DOCUMENTS NATURAL JOIN BOOKS WHERE userID=%s and status='0' and availability='1'", (session['id'],))
     previousbooks=mycursor.fetchall()
     mycursor.execute("SELECT DISTINCT(documentID),title,typeOfDocument FROM BORROW NATURAL JOIN DOCUMENTS NATURAL JOIN ARTICLES WHERE userID=%s and status='0' and availability='1'", (session['id'],))
     previousarticles=mycursor.fetchall()
     mycursor.execute("SELECT DISTINCT(documentID),title,typeOfDocument FROM BORROW NATURAL JOIN DOCUMENTS NATURAL JOIN ISSUES WHERE userID=%s and status='0' and availability='1'", (session['id'],))
     previousissues=mycursor.fetchall()
-    return render_template('member_home.html',username=session['name'],books=books,articles=articles,issues=issues,previousbooks=previousbooks,previousarticles=previousarticles,previousissues=previousissues)
+    return render_template('member_home.html',username=session['name'],books=books,articles=articles,issues=issues,previousbooks=previousbooks,previousarticles=previousarticles,previousissues=previousissues,overdue=overdue)
 
 @app.route('/logout',methods=['GET'])
 def logout():
@@ -220,19 +237,30 @@ def delete_member():
         if request.method == 'POST':
             details = request.form
             id = details['member_id']
+            mycursor.execute("SELECT * FROM BORROW WHERE userID=%s and status=1",(id,))
+            if mycursor.fetchone():
+                mycursor.execute("SELECT * FROM USERS WHERE userID IN (SELECT userID FROM BORROW WHERE NOW()>returnBy) and typeOfUser='member'")
+                overduemembers=mycursor.fetchall()
+                mycursor.execute("SELECT * FROM USERS WHERE userID NOT IN (SELECT userID FROM BORROW WHERE NOW()>returnBy) and typeOfUser='member'")
+                notoverduemembers=mycursor.fetchall()
+                return render_template('delete_member.html',error="Member has pending books",overduemembers=overduemembers,notoverduemembers=notoverduemembers)
             try:
                 mycursor.execute("DELETE FROM USERS WHERE userID=%s and typeOfUser='member'",(id,))
                 mydb.commit()
             except mysql.connector.Error as err:
+                mycursor.execute("SELECT * FROM USERS WHERE userID IN (SELECT userID FROM BORROW WHERE NOW()>returnBy) and typeOfUser='member'")
+                overduemembers=mycursor.fetchall()
+                mycursor.execute("SELECT * FROM USERS WHERE userID NOT IN (SELECT userID FROM BORROW WHERE NOW()>returnBy) and typeOfUser='member'")
+                notoverduemembers=mycursor.fetchall()
                 print("Something went wrong: {}".format(err))
-                mycursor.execute("SELECT * FROM USERS WHERE typeOfUser='member'")
-                members=mycursor.fetchall()
-                return render_template('delete_member.html',error=str(err),members=members)
+                return render_template('delete_member.html',error=str(err),overduemembers=overduemembers,notoverduemembers=notoverduemembers)
             return redirect(url_for('librarian_home'))
         else:
-            mycursor.execute("SELECT * FROM USERS WHERE typeOfUser='member'")
-            members=mycursor.fetchall()
-            return render_template('delete_member.html',members=members)
+            mycursor.execute("SELECT * FROM USERS WHERE userID IN (SELECT userID FROM BORROW WHERE NOW()>returnBy) and typeOfUser='member'")
+            overduemembers=mycursor.fetchall()
+            mycursor.execute("SELECT * FROM USERS WHERE userID NOT IN (SELECT userID FROM BORROW WHERE NOW()>returnBy) and typeOfUser='member'")
+            notoverduemembers=mycursor.fetchall()
+            return render_template('delete_member.html',overduemembers=overduemembers,notoverduemembers=notoverduemembers)
 
 #librarian will be able to view and modify the details of documents
 # @app.route('/modify_document',methods=['GET','POST'])
@@ -298,6 +326,12 @@ def search_document():
         if request.method == 'POST':
             details = request.form
             documenttype = details['documenttype']
+            mycursor.execute("SELECT returnBy FROM BORROW WHERE userID=%s and status='1'",(session['id'],))
+            borrow=mycursor.fetchall()
+            overdue=0
+            for i in borrow:
+                if i[0]<datetime.datetime.now():
+                    overdue=1
             if documenttype=="0":
                 title = details['booktitle']
                 author = details['bookauthor']
@@ -314,7 +348,7 @@ def search_document():
                 else:
                     mycursor.execute("SELECT documentID,title,edition,publishedOn,publishedBy,authorName,IF(availability='1',1,0) as availability FROM BOOKS NATURAL JOIN BOOKAUTHORS NATURAL JOIN DOCUMENTS WHERE title LIKE %s or edition=%s or publishedBy LIKE %s or authorName LIKE %s",(title,edition,publisher,author))
                 documents=mycursor.fetchall()
-                return render_template('search_document.html',books=documents,a="selected")
+                return render_template('search_document.html',books=documents,a="selected",overdue=overdue)
             elif documenttype=="1":
                 title = details['articletitle']
                 author = details['articleauthor']
@@ -333,7 +367,7 @@ def search_document():
                 else:
                     mycursor.execute("SELECT documentID,title,authorName,journalName,journalPublishedBy,IF(availability='1',1,0) as availability FROM ARTICLES NATURAL JOIN ARTICLEAUTHORS NATURAL JOIN DOCUMENTS WHERE title LIKE %s or journalName LIKE %s or journalPublishedBy LIKE %s or authorName LIKE %s",(title,journal,publisher,author))
                 documents=mycursor.fetchall()
-                return render_template('search_document.html',articles=documents,b="selected")
+                return render_template('search_document.html',articles=documents,b="selected",overdue=overdue)
             elif documenttype=="2":
                 title = details['issuetitle']
                 contributor = details['issueauthor']
@@ -351,7 +385,7 @@ def search_document():
                 else:
                     mycursor.execute("SELECT documentID,title,contributorEditorName,magazineName,dateOfIssue,IF(availability='1',1,0) as availability FROM ISSUES NATURAL JOIN ISSUECONTRIBUTOREDITOR NATURAL JOIN DOCUMENTS WHERE title LIKE %s or contributorEditorName LIKE %s or magazineName LIKE %s or dateOfIssue BETWEEN %s and %s",(title,contributor,magazine,issuefrom,issuetill))
                 documents=mycursor.fetchall()
-                return render_template('search_document.html',issues=documents,c="selected")
+                return render_template('search_document.html',issues=documents,c="selected",overdue=overdue)
         else:
             return render_template('search_document.html',a="selected")
     else:
@@ -422,8 +456,13 @@ def borrow_document():
         details = request.form
         document_id = details['document_id']
         user_id = session['id']
-        mycursor.execute("INSERT INTO BORROW(userID,documentID,borrowDate,status) VALUES (%s,%s,%s,%s)", (user_id,document_id,datetime.datetime.now(),1))
+        borrow_date = datetime.datetime.now()
+        mycursor.execute("INSERT INTO BORROW(userID,documentID,borrowDate,status) VALUES (%s,%s,%s,%s)", (user_id,document_id,borrow_date,1))
         mycursor.execute("UPDATE DOCUMENTS SET availability='0' WHERE documentID=%s",(document_id,))
+        mydb.commit()
+        mycursor.execute("SELECT borrowID FROM BORROW ORDER BY borrowID DESC LIMIT 1")
+        borrow_id=mycursor.fetchone()
+        mycursor.execute("UPDATE BORROW SET returnBy = DATE_ADD(borrowDate, INTERVAL 7 DAY) WHERE borrowID=%s",(borrow_id))
         mydb.commit()
         return redirect(url_for('member_home'))
         
@@ -434,7 +473,13 @@ def borrow_document():
         articles=mycursor.fetchall()
         mycursor.execute("SELECT * FROM ISSUES WHERE documentID IN (SELECT documentID FROM DOCUMENTS WHERE typeOfDocument='issue' and availability='1')")
         issues=mycursor.fetchall()
-        return render_template('borrow_document.html',books=books,articles=articles,issues=issues)
+        overdue=0
+        mycursor.execute("SELECT returnBy FROM BORROW WHERE userID=%s and status='1'",(session['id'],))
+        borrow=mycursor.fetchall()
+        for i in borrow:
+            if i[0]<datetime.datetime.now():
+                overdue=1
+        return render_template('borrow_document.html',books=books,articles=articles,issues=issues,overdue=overdue)
 
 
 @app.route('/return_document',methods=['GET','POST'])

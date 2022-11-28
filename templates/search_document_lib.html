@@ -66,7 +66,11 @@
                 <td style="border: 1px solid black;">{{ book[3] }}</td>
                 <td style="border: 1px solid black;">{{ book[4] }}</td>
                 <td style="border: 1px solid black;">{{ book[5] }}</td>
-                <td style="border: 1px solid black;">Available</td>
+                {% if book[6] == 1 %}
+                    <td style="border: 1px solid black;">Available</td>
+                {% else %}
+                    <td style="border: 1px solid black;">Rented</td>
+                {% endif %} 
             </tr>
         {% endfor %}
             </table>
@@ -100,7 +104,11 @@
                 <td style="border: 1px solid black;">{{ book[5] }}</td>
                 <td style="border: 1px solid black;">{{ book[2] }}</td>
                 <td style="border: 1px solid black;">{{ book[4] }}</td>
-                <td style="border: 1px solid black;">Available</td>
+                {% if book[5] == 1 %}
+                    <td style="border: 1px solid black;">Available</td>
+                {% else %}
+                    <td style="border: 1px solid black;">Rented</td>
+                {% endif %} 
             </tr>
         {% endfor %}
             </table>

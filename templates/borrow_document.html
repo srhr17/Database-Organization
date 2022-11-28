@@ -10,12 +10,32 @@ table {
     width: 100%;
 }
     </style>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+      
 </head>
 <body>
-    <h1>Borrow Document</h1>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="./member_home"></a>
+          </div>
+          <ul class="nav navbar-nav">
+            <li><a href="./member_home">Member Dashboard</a></li>
+            <li class="active"><a href="./borrow_document">Borrow Document</a></li>
+            <li><a href="./search_document">Search Document</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/modify_member"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+            <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Log Out</a></li>
+          </ul>
+        </div>
+      </nav>
+    <h1 class="text-muted text-center">Borrow Document</h1>
     
-    <p>Here are the books that are in library:</p>
-        <table style="border: 1px solid black; width: 100%;">
+    <h4 class="text-muted text-center">Here are the books that are in library:</h4>
+        <table class="table table-hover" style="border: 1px solid black; width: 100%;">
             <tr style="border: 1px solid black;">
                 <th style="border: 1px solid black;">Document ID</th>
                 <th style="border: 1px solid black;">Title</th>
@@ -30,16 +50,22 @@ table {
                     <td style="border: 1px solid black;">{{ book[2] }}</td>
                     <td style="border: 1px solid black;">{{ book[3] }}</td>
                     <td style="border: 1px solid black;">{{ book[4] }}</td>
-                    <td style="border: 1px solid black;"><form action="/borrow_document" method="post">
-                        <input type="hidden" name="document_id" id="document_id" value="{{ book[0]}}">
-                        <input type="submit" value="Borrow">
-                    </form></td>
+                    {% if overdue ==1 %}
+                        <td style="border: 1px solid black;">Forbidden from borrowing, Overdue exists</td>
+                    {% else %}
+                        <td style="border: 1px solid black;">
+                            <form method="post" action="/borrow_document">
+                                <input type="hidden" name="document_id" value="{{ book[0] }}">
+                                <input class="btn" type="submit" value="Borrow">
+                            </form>
+                            </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </table>
     <hr>
-    <p>Here are the issues that are in library:</p>
-    <table style="border: 1px solid black;">
+    <h4 class="text-muted text-center">Here are the issues that are in library:</h4>
+    <table class="table table-hover" style="border: 1px solid black;">
         <tr style="border: 1px solid black;">
             <th style="border: 1px solid black;">Document ID</th>
             <th style="border: 1px solid black;">Title</th>
@@ -52,16 +78,22 @@ table {
                 <td style="border: 1px solid black;">{{ book[1] }}</td>
                 <td style="border: 1px solid black;">{{ book[2] }}</td>
                 <td style="border: 1px solid black;">{{ book[3] }}</td>
-                <td style="border: 1px solid black;"><form action="/borrow_document" method="post">
-                    <input type="hidden" name="document_id" id="document_id" value="{{ book[0]}}">
-                    <input type="submit" value="Borrow">
-                </form></td>
+                {% if overdue ==1 %}
+                        <td style="border: 1px solid black;">Forbidden from borrowing, Overdue exists</td>
+                    {% else %}
+                        <td style="border: 1px solid black;">
+                            <form method="post" action="/borrow_document">
+                                <input type="hidden" name="document_id" value="{{ book[0] }}">
+                                <input class="btn" type="submit" value="Borrow">
+                            </form>
+                            </td>
+                    {% endif %}
             </tr>
         {% endfor %}
     </table>
         <hr>
-        <p>Here are the articles that are in library:</p>
-        <table style="border: 1px solid black;">
+        <h4 class="text-muted text-center">Here are the articles that are in library:</h4>
+        <table class="table table-hover" style="border: 1px solid black;">
             <tr style="border: 1px solid black;">
                 <th style="border: 1px solid black;">Document ID</th>
                 <th style="border: 1px solid black;">Title</th>
@@ -76,13 +108,18 @@ table {
                     <td style="border: 1px solid black;">{{ book[2] }}</td>
                     <td style="border: 1px solid black;">{{ book[3] }}</td>
                     <td style="border: 1px solid black;">{{ book[4] }}</td>
-                    <td style="border: 1px solid black;"><form action="/borrow_document" method="post">
-                        <input type="hidden" name="document_id" id="document_id" value="{{ book[0]}}">
-                        <input type="submit" value="Borrow">
-                    </form></td>
+                    {% if overdue ==1 %}
+                        <td style="border: 1px solid black;">Forbidden from borrowing, Overdue exists</td>
+                    {% else %}
+                        <td style="border: 1px solid black;">
+                            <form method="post" action="/borrow_document">
+                                <input type="hidden" name="document_id" value="{{ book[0] }}">
+                                <input class="btn" type="submit" value="Borrow">
+                            </form>
+                            </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </table>
-    <a href="./member_home">Back to Dashboard!</a>
 </body>
 </html>
