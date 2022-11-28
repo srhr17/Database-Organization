@@ -27,29 +27,63 @@
         }
 
     </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    
 </head>
 <body onload="showForm(this.value)">
-    <h2>Search Document</h2>
-    <select name="documenttype" id="documenttype" onchange="showForm(this.value)">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="./librarian_home"></a>
+          </div>
+          <ul class="nav navbar-nav">
+            <li ><a href="./librarian_home">Librarian Dashboard</a></li>
+            <li><a href="./add_book">Add Book</a></li>
+            <li><a href="./add_article">Add Article</a></li>
+            <li><a href="./add_issue">Add Issue</a></li>
+            <li class="active"><a href="./search_document">Search Document</a></li>
+            <li><a href="./delete_member">Delete Member</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/modify_member"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+            <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Log Out</a></li>
+          </ul>
+        </div>
+      </nav>
+    <h1 class="text-muted text-center">Search Document</h1>
+    <select name="documenttype" id="documenttype" class="dropup" onchange="showForm(this.value)" style="margin-left:50%;margin-bottom: 2%;margin-top: 5%;">
         <option value="0" {{a}}>Book</option>
         <option value="1" {{b}}>Article</option>
         <option value="2" {{c}}>Issue</option>
     </select>
     <div id="bookForm" style="display: block;">
-    <form method="post" action="/search_document">
+    <form method="post" action="/search_document" style="margin-left:10%">
         <input type="hidden" name="documenttype" value="0">
+        <div class="form-group" style="display:inline-block;">
         <label for="booktitle">Book Title</label>
         <input type="text" name="booktitle" id="booktitle" value="">
+        </div>
+        <div class="form-group" style="display:inline-block;">
         <label for="bookauthor">Book Author</label>
         <input type="text" name="bookauthor" id="bookauthor" value="">
+        </div>
+        <div class="form-group" style="display:inline-block;">
         <label for="bookpublisher">Book Publisher</label>
         <input type="text" name="bookpublisher" id="bookpublisher" value="">
+        </div>
+        <div class="form-group" style="display:inline-block;">
         <label for="edition">Edition</label>
         <input type="text" name="edition" id="edition" value="">
-        <input type="submit" value="Search">
+        </div>
+        <div style="display:inline-block;">
+        <input class="btn btn-success" type="submit" value="Search" style="margin-left: 15%;">
+        </div>
     </form>
-    <p>Here are the documents matching your search</p>
-    <table style="border: 1px solid black; width: 100%;" id="documents">
+    {% if books %}
+    <h4 class="text-muted text-center">Here are the documents matching your search</h4>
+    <table class="table table-hover" style="border: 1px solid black; width: 100%;" id="documents">
         <tr style="border: 1px solid black;">
             <th style="border: 1px solid black;">Document ID</th>
             <th style="border: 1px solid black;">Title</th>
@@ -67,27 +101,41 @@
                 <td style="border: 1px solid black;">{{ book[4] }}</td>
                 <td style="border: 1px solid black;">{{ book[5] }}</td>
                 {% if book[6] == 1 %}
-                    <td style="border: 1px solid black;">Available</td>
+                <td style="border: 1px solid black;" class="bg-success">Available</td>
+
                 {% else %}
-                    <td style="border: 1px solid black;">Rented</td>
+                    <td style="border: 1px solid black;" class="bg-danger">Rented</td>
                 {% endif %} 
             </tr>
         {% endfor %}
             </table>
+            {% endif %}
+
         </div>
         <div id="articleForm" style="display: none;">
-    <form method="post" action="/search_document">
+    <form method="post" action="/search_document" style="margin-left: 10%;">
         <input type="hidden" name="documenttype" value="1">
+        <div class="form-group" style="display:inline-block;">
         <label for="articletitle">Article Title</label>
         <input type="text" name="articletitle" id="articletitle" value="">
+        </div>
+        <div class="form-group" style="display:inline-block;">
         <label for="articleauthor">Article Author</label>
         <input type="text" name="articleauthor" id="articleauthor" value="">
+        </div>
+        <div class="form-group" style="display:inline-block;">
         <label for="journal">Journal Name</label>
         <input type="text" name="journal" id="journal" value="">
+        </div>
+        <div class="form-group" style="display:inline-block;">
         <label for="journalpublisher">Journal Publisher</label>
         <input type="text" name="journalpublisher" id="journalpublisher" value="">
-        <input type="submit" value="Search">
+        </div>
+        <div class="form-group" style="display:inline-block;">
+        <input type="submit" class="btn btn-success" value="Search">
+        </div>
     </form>
+    {% if articles %}
     <p>Here are the documents matching your search</p>
     <table style="border: 1px solid black; width: 100%;" id="documents">
         <tr style="border: 1px solid black;">
@@ -104,32 +152,47 @@
                 <td style="border: 1px solid black;">{{ book[5] }}</td>
                 <td style="border: 1px solid black;">{{ book[2] }}</td>
                 <td style="border: 1px solid black;">{{ book[4] }}</td>
-                {% if book[5] == 1 %}
-                    <td style="border: 1px solid black;">Available</td>
+                {% if book[6] == 1 %}
+                <td style="border: 1px solid black;" class="bg-success">Available</td>
+
                 {% else %}
-                    <td style="border: 1px solid black;">Rented</td>
-                {% endif %} 
+                    <td style="border: 1px solid black;" class="bg-danger">Rented</td>
+                {% endif %}  
             </tr>
         {% endfor %}
             </table>
+            {% endif %}
 </div>
 <div id="issueForm" style="display: none;">
-    <form method="post" action="/search_document">
+    <form method="post" action="/search_document" style="margin-left: 5%;">
         <input type="hidden" name="documenttype" value="2">
+        <div class="form-group" style="display:inline-block;">
         <label for="issuetitle">Issue Title</label>
         <input type="text" name="issuetitle" id="issuetitle" value="">
+        </div>
+        <div class="form-group" style="display:inline-block;">
         <label for="issueauthor">Issue Contributor</label>
         <input type="text" name="issueauthor" id="issueauthor" value="">
+        </div>
+        <div class="form-group" style="display:inline-block;">
         <label for="magazine">Magazine Name</label>
         <input type="text" name="magazine" id="magazine" value="">
+        </div>
+        <div class="form-group" style="display:inline-block;">
         <label for="issuefrom">Issues from</label>
         <input type="date" name="issuefrom" id="issuefrom" value="01/01/1000">
+        </div>
+        <div class="form-group" style="display:inline-block;">
         <label for="issuetill">Issues till</label>
         <input type="date" name="issuetill" id="issuetill" value="01/01/2099">
-        <input type="submit" value="Search">
+        </div>
+        <div class="form-group" style="display:inline-block;">
+        <input type="submit" value="Search" class="btn btn-success">
+        </div>
     </form>
-    <p>Here are the documents matching your search</p>
-    <table style="border: 1px solid black; width: 100%;" id="documents">
+    {% if issues %}
+    <h4 class="text-muted text-center">Here are the documents matching your search</h4>
+    <table class="table table-hover" style="border: 1px solid black; width: 100%;" id="documents">
         <tr style="border: 1px solid black;">
             <th style="border: 1px solid black;">Document ID</th>
             <th style="border: 1px solid black;">Title</th> 
@@ -145,15 +208,17 @@
                 <td style="border: 1px solid black;">{{ book[3] }}</td>
                 <td style="border: 1px solid black;">{{ book[4] }}</td>
                 {% if book[5] == 1 %}
-                    <td style="border: 1px solid black;">Available</td>
+                <td style="border: 1px solid black;" class="bg-success">Available</td>
+
                 {% else %}
-                    <td style="border: 1px solid black;">Rented</td>
+                    <td style="border: 1px solid black;" class="bg-danger">Rented</td>
                 {% endif %} 
             </tr>
         {% endfor %}
             </table>
+            {% endif %}
+
 </div>
-   
-        <a href="./librarian_home">Back to Dashboard!</a>
+        <!-- <a href="./member_home">Back to Dashboard!</a> -->
     </body>
 </html>

@@ -33,7 +33,7 @@ def index():
         account = mycursor.fetchone()
         if account==None:
             flash('Invalid username/password!')
-            return redirect(url_for('index'))
+            return render_template('index.html',error='Invalid username/password!')
         if account[-1]=="librarian":
             session['username'] = username
             session['role'] = "librarian"
@@ -227,8 +227,8 @@ def modify_member():
     else:
         mycursor.execute("SELECT * FROM USERS WHERE userID=%s",(session['id'],))
         member=mycursor.fetchone()
-
-        return render_template('modify_member.html',id=member[0],fname=member[1],lname=member[2],dob=member[6],password=member[5],memberSince=member[4])
+    
+        return render_template('modify_member.html',id=member[0],fname=member[1],lname=member[2],dob=member[6],password=member[5],memberSince=member[4],role=session['role'])
 
 #librarian will be able to delete the details of members
 @app.route('/delete_member',methods=['GET','POST']) 

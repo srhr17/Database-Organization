@@ -2,40 +2,54 @@
 <html>
     <head>
         <title>Librarian Dashboard</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        
     </head>
     <body>
-        <h1>Librarian Dashboard</h1>
-        <p>Hi, {{ username }}!</p>
-        <button onclick="window.location.href='/add_book'">Add Book</button>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+              <div class="navbar-header">
+                <a class="navbar-brand" href="./librarian_home"></a>
+              </div>
+              <ul class="nav navbar-nav">
+                <li class="active"><a href="./librarian_home">Librarian Dashboard</a></li>
+                <li><a href="./add_book">Add Book</a></li>
+                <li><a href="./add_article">Add Article</a></li>
+                <li><a href="./add_issue">Add Issue</a></li>
+                <li><a href="./search_document">Search Document</a></li>
+                <li><a href="./delete_member">Delete Member</a></li>
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="/modify_member"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Log Out</a></li>
+              </ul>
+            </div>
+          </nav>
+        <h1 class="text-muted text-center">Librarian Dashboard</h1>
+        <h2 class="text-info text-center">Hi, {{ username }}!</h2>
+        <!-- <button onclick="window.location.href='/add_book'">Add Book</button>
         <button onclick="window.location.href='/add_article'">Add Article</button>
         <button onclick="window.location.href='/add_issue'">Add Issue</button>
         <button onclick="window.location.href='/search_document'">Search Document</button>
-        <!-- <button onclick="window.location.href='/modify_document'">Modify Document</button> -->
+        <button onclick="window.location.href='/modify_document'">Modify Document</button>
         <button onclick="window.location.href='/delete_member'">Remove Member</button>
-        <button onclick="window.location.href='/modify_member'">Update Profile</button>
+        <button onclick="window.location.href='/modify_member'">Update Profile</button> -->
 
 <span>{{error}}</span>
-<h2>Current Members</h2>
-<table border="1">
+<h2 class="text-muted text-center">Current Members</h2>
+<table border="1" class="table table-hover">
 <tr>
 <th>Member ID</th>
 <th>First Name</th>
 <th>Last Name</th>
-<th>Overdue Status</th>
-<th>Remove Member</th>
 </tr>
 {% for member in overduemembers %}
 <tr>
 <td>{{ member[0] }}</td>
 <td>{{ member[1] }}</td>
 <td>{{ member[2] }}</td>
-<td>Overdue</td>
-<td style="border: 1px solid black;">
-    <form method="post" action="/delete_member">
-        <input type="hidden" name="member_id" value="{{ member[0] }}">
-        <input type="submit" value="Remove">
-    </form>
-    </td>
 </tr>
 {% endfor %}
 {% for member in notoverduemembers %}
@@ -43,17 +57,10 @@
 <td>{{ member[0] }}</td>
 <td>{{ member[1] }}</td>
 <td>{{ member[2] }}</td>
-<td>None</td>
-<td style="border: 1px solid black;">
-    <form method="post" action="/delete_member">
-        <input type="hidden" name="member_id" value="{{ member[0] }}">
-        <input type="submit" value="Remove">
-    </form>
-    </td>
 </tr>
 {% endfor %}
 </tr>
 </table>
-        <p>If you wish to <a href="/logout">logout, click here!</a></p>
+        <!-- <p>If you wish to <a href="/logout">logout, click here!</a></p> -->
     </body>
 </html>

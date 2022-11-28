@@ -4,43 +4,85 @@
 <html>
 <head>
 <title>Modify Member</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-<h1>Modify Member</h1>
-<form action="/modify_member" method="post">
+  {% if role=='member' %}
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="./member_home"></a>
+          </div>
+          <ul class="nav navbar-nav">
+            <li><a href="./member_home">Member Dashboard</a></li>
+            <li><a href="./borrow_document">Borrow Document</a></li>
+            <li><a href="./search_document">Search Document</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li class="active"><a href="/modify_member"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+            <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Log Out</a></li>
+          </ul>
+        </div>
+      </nav>
+    {% else %}
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="./librarian_home"></a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a href="./librarian_home">Librarian Dashboard</a></li>
+          <li><a href="./add_book">Add Book</a></li>
+          <li><a href="./add_article">Add Article</a></li>
+          <li><a href="./add_issue">Add Issue</a></li>
+          <li><a href="./search_document">Search Document</a></li>
+          <li><a href="./delete_member">Delete Member</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li class="active"><a href="/modify_member"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+          <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Log Out</a></li>
+        </ul>
+      </div>
+    </nav>
+  {% endif %}
+
+<h1 class="text-muted text-center">Modify Member</h1>
+<form action="/modify_member" method="post" style="margin-left:40%;margin-top: 10%;">
 <table>
 <tr>
-    <td>User ID:</td>
-   <td> <input type="text" name="id" id="id" value={{id}} readonly/></td>
+    <td class="text-muted text-center">User ID</td>
+    <td> <input type="text" name="id" id="id" class="text-danger" value={{id}} readonly/></td>
 </tr>
 <tr>
-    <td>Member Since</td>
-    <td><input type="text" name="memberSince" id="memberSince" value={{memberSince}} readonly></td>
+    <td class="text-muted text-center">Member Since</td>
+    <td><input type="text" name="memberSince" id="memberSince" class="text-danger" value={{memberSince}} readonly></td>
 
 </tr>
 <tr>
-<td>First Name:</td>
-<td><input type="text" name="fname" id ="fname" value={{fname}} /></td>
+<td class="text-muted text-center">First Name</td>
+<td><input type="text" name="fname" id ="fname" class="text-muted" value={{fname}} /></td>
 </tr>
 <tr>
-<td>Last Name:</td>
-<td><input type="text" name="lname" id ="lname" value={{lname}} /></td>
+<td class="text-muted text-center">Last Name</td>
+<td><input type="text" name="lname" id ="lname" class="text-muted" value={{lname}} /></td>
 </tr>
 <tr>
-<td>Date of Birth:</td>
-<td><input type="text" name="dob" id ="dob" value={{dob}} /></td>
+<td class="text-muted text-center">Date of Birth</td>
+<td><input type="date" name="dob" id ="dob" class="text-muted" value={{dob}} /></td>
 </tr>
 <tr>
-<td>Password:</td>
-<td><input type="text" name="password" id ="password" value={{password}} /></td>
+<td class="text-muted text-center">Password</td>
+<td><input type="password" name="password" id ="password" class="text-muted" value={{password}} /></td>
 </tr>
 <tr>
 
-<td><input type="submit" value="Update Member" /></td>
+<td ><input type="submit" class="btn btn-warning" style="margin-top: 5%;margin-left: 60%;" value="Update Member" /></td>
 </tr>
 </form>
 
-<a href="javascript:history.back()">Back to Dashboard!</a>
+<!-- <a href="javascript:history.back()">Back to Dashboard!</a> -->
 
 </body>
 </html>

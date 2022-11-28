@@ -9,29 +9,64 @@
             viewMode    :   "years", 
              });
    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    
 </head>
 <body>
-    <h1>Add Book</h1>
-    <form action="/add_article" method="POST">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="./librarian_home"></a>
+          </div>
+          <ul class="nav navbar-nav">
+            <li><a href="./librarian_home">Librarian Dashboard</a></li>
+            <li><a href="./add_book">Add Book</a></li>
+            <li class="active"><a href="./add_article">Add Article</a></li>
+            <li><a href="./add_issue">Add Issue</a></li>
+            <li><a href="./search_document">Search Document</a></li>
+            <li><a href="./delete_member">Delete Member</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/modify_member"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+            <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Log Out</a></li>
+          </ul>
+        </div>
+      </nav>
+    <h1 class="text-muted text-center">Add Article</h1>
+    <form action="/add_article" method="POST" style="margin-left: 5%;">
+        <div class="form-group" style="display: inline-block;">
         <label for="title">Title</label>
         <input type="text" name="title" id="title" required>
+        </div>
+        <div class="form-group" style="display: inline-block;">
         <label for="author">Author (Seperate using ,)</label>
         <input type="text" name="author" id="author" required>
+        </div>
+        <div class="form-group" style="display: inline-block;">
         <label for="edition">Journal Name</label>
         <input type="text" name="edition" id="edition" required>
+        </div>
+        <div class="form-group" style="display: inline-block;">
         <label for="year">Published Year</label>
         <input type="number" name="year" id="year" min="1800" max="2022" required>
+        </div>
+        <div class="form-group" style="display: inline-block;">
         <label for="published_by">Published By</label>
         <input type="text" name="published_by" id="published_by" required>
-        <button type="submit">Add Article</button>
+        </div>
+        <div class="form-group" style="display: inline-block;">
+        <button type="submit" class="btn btn-primary">Add Article</button>
+        </div>
     </form>
     <hr>
-    <p>Here are the articles that are in library:</p>
-        <ol>
+    <h3 class="text-muted text-center">Here are the articles that are in library:</h3>
+        <ol class="list-group">
             {% for article in articles %}
-                <li>{{ article }}</li>
+                <li class="list-group-item text-center text-muted"><h4>{{ article[0] }}</h4></li>
             {% endfor %}
         </ol>
-    <a href="./librarian_home">Back to Dashboard!</a>
+    <!-- <a href="./librarian_home">Back to Dashboard!</a> -->
 </body>
 </html>
