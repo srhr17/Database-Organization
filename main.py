@@ -211,7 +211,6 @@ def add_issue():
         issues=mycursor.fetchall()
         return render_template('add_issue.html',issues=issues)
 
-
 #librarian will be able to view and modify the details of members
 @app.route('/modify_member',methods=['GET','POST'])
 def modify_member():
@@ -457,6 +456,7 @@ def borrow_document():
         document_id = details['document_id']
         user_id = session['id']
         borrow_date = datetime.datetime.now()
+        
         mycursor.execute("INSERT INTO BORROW(userID,documentID,borrowDate,status) VALUES (%s,%s,%s,%s)", (user_id,document_id,borrow_date,1))
         mycursor.execute("UPDATE DOCUMENTS SET availability='0' WHERE documentID=%s",(document_id,))
         mydb.commit()
